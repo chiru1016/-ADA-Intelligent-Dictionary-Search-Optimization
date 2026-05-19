@@ -31,7 +31,7 @@ class DictionarySearchGUI:
             "Treeview",
             background="white",
             foreground="#1F2937",
-            rowheight=30,
+            rowheight=28,
             fieldbackground="white",
             font=("Segoe UI", 10)
         )
@@ -73,14 +73,53 @@ class DictionarySearchGUI:
         main_frame = tk.Frame(self.root, bg="#F4F7FB")
         main_frame.pack(fill="both", expand=True, padx=20, pady=18)
 
-        left_panel = tk.Frame(main_frame, bg="#FFFFFF", width=330)
-        left_panel.pack(side="left", fill="y", padx=(0, 15))
-        left_panel.pack_propagate(False)
+        # LEFT SCROLLABLE PANEL
+        left_outer = tk.Frame(main_frame, bg="#FFFFFF", width=350)
+        left_outer.pack(side="left", fill="y", padx=(0, 15))
+        left_outer.pack_propagate(False)
+
+        left_canvas = tk.Canvas(
+            left_outer,
+            bg="#FFFFFF",
+            highlightthickness=0
+        )
+        left_canvas.pack(side="left", fill="both", expand=True)
+
+        left_scrollbar = ttk.Scrollbar(
+            left_outer,
+            orient="vertical",
+            command=left_canvas.yview
+        )
+        left_scrollbar.pack(side="right", fill="y")
+
+        left_canvas.configure(yscrollcommand=left_scrollbar.set)
+
+        left_panel = tk.Frame(left_canvas, bg="#FFFFFF")
+        left_window = left_canvas.create_window(
+            (0, 0),
+            window=left_panel,
+            anchor="nw",
+            width=330
+        )
+
+        def update_scroll_region(event):
+            left_canvas.configure(scrollregion=left_canvas.bbox("all"))
+
+        def resize_left_panel(event):
+            left_canvas.itemconfig(left_window, width=event.width)
+
+        def mouse_scroll(event):
+            left_canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+
+        left_panel.bind("<Configure>", update_scroll_region)
+        left_canvas.bind("<Configure>", resize_left_panel)
+        left_canvas.bind_all("<MouseWheel>", mouse_scroll)
 
         self.create_input_card(left_panel)
-        self.create_action_card(left_panel)
         self.create_table_card(left_panel)
+        self.create_action_card(left_panel)
 
+        # RIGHT PANEL
         right_panel = tk.Frame(main_frame, bg="#F4F7FB")
         right_panel.pack(side="right", fill="both", expand=True)
 
@@ -89,8 +128,8 @@ class DictionarySearchGUI:
         self.create_comparison_card(right_panel)
 
     def create_input_card(self, parent):
-        card = tk.Frame(parent, bg="white", padx=18, pady=15)
-        card.pack(fill="x", padx=0, pady=(0, 12))
+        card = tk.Frame(parent, bg="white", padx=18, pady=12)
+        card.pack(fill="x", pady=(0, 10))
 
         tk.Label(
             card,
@@ -106,7 +145,7 @@ class DictionarySearchGUI:
             font=("Segoe UI", 9),
             bg="white",
             fg="#6B7280"
-        ).pack(anchor="w", pady=(0, 10))
+        ).pack(anchor="w", pady=(0, 8))
 
         tk.Label(
             card,
@@ -138,7 +177,7 @@ class DictionarySearchGUI:
             bd=1,
             relief="solid"
         )
-        self.freq_entry.pack(fill="x", pady=(4, 12), ipady=5)
+        self.freq_entry.pack(fill="x", pady=(4, 10), ipady=5)
 
         add_btn = tk.Button(
             card,
@@ -180,9 +219,51 @@ class DictionarySearchGUI:
         )
         clear_btn.pack(fill="x", pady=(8, 0), ipady=7)
 
+    def create_table_card(self, parent):
+        card = tk.Frame(parent, bg="white", padx=18, pady=10)
+        card.pack(fill="x", pady=(0, 10))
+
+        tk.Label(
+            card,
+            text="Dictionary Dataset",
+            font=("Segoe UI", 13, "bold"),
+            bg="white",
+            fg="#111827"
+        ).pack(anchor="w")
+
+        tk.Label(
+            card,
+            text="Loaded words and frequencies",
+            font=("Segoe UI", 8),
+            bg="white",
+            fg="#6B7280"
+        ).pack(anchor="w", pady=(0, 6))
+
+        table_frame = tk.Frame(card, bg="white")
+        table_frame.pack(fill="x")
+
+        self.table = ttk.Treeview(
+            table_frame,
+            columns=("Word", "Frequency"),
+            show="headings",
+            height=6
+        )
+
+        self.table.heading("Word", text="Word")
+        self.table.heading("Frequency", text="Frequency")
+
+        self.table.column("Word", width=150, anchor="center")
+        self.table.column("Frequency", width=110, anchor="center")
+
+        scrollbar = ttk.Scrollbar(table_frame, orient="vertical", command=self.table.yview)
+        self.table.configure(yscrollcommand=scrollbar.set)
+
+        self.table.pack(side="left", fill="x", expand=True)
+        scrollbar.pack(side="right", fill="y")
+
     def create_action_card(self, parent):
-        card = tk.Frame(parent, bg="white", padx=18, pady=15)
-        card.pack(fill="x", pady=(0, 12))
+        card = tk.Frame(parent, bg="white", padx=18, pady=12)
+        card.pack(fill="x", pady=(0, 20))
 
         tk.Label(
             card,
@@ -241,48 +322,6 @@ class DictionarySearchGUI:
             cursor="hand2"
         )
         balanced_btn.pack(fill="x", pady=(8, 0), ipady=8)
-
-    def create_table_card(self, parent):
-        card = tk.Frame(parent, bg="white", padx=18, pady=15)
-        card.pack(fill="both", expand=True)
-
-        tk.Label(
-            card,
-            text="Dictionary Dataset",
-            font=("Segoe UI", 14, "bold"),
-            bg="white",
-            fg="#111827"
-        ).pack(anchor="w")
-
-        tk.Label(
-            card,
-            text="Words are sorted internally",
-            font=("Segoe UI", 9),
-            bg="white",
-            fg="#6B7280"
-        ).pack(anchor="w", pady=(0, 10))
-
-        table_frame = tk.Frame(card, bg="white")
-        table_frame.pack(fill="both", expand=True)
-
-        self.table = ttk.Treeview(
-            table_frame,
-            columns=("Word", "Frequency"),
-            show="headings",
-            height=6
-        )
-
-        self.table.heading("Word", text="Word")
-        self.table.heading("Frequency", text="Frequency")
-
-        self.table.column("Word", width=150, anchor="center")
-        self.table.column("Frequency", width=110, anchor="center")
-
-        scrollbar = ttk.Scrollbar(table_frame, orient="vertical", command=self.table.yview)
-        self.table.configure(yscrollcommand=scrollbar.set)
-
-        self.table.pack(side="left", fill="both", expand=True)
-        scrollbar.pack(side="right", fill="y")
 
     def create_result_cards(self, parent):
         cards_frame = tk.Frame(parent, bg="#F4F7FB")
@@ -434,6 +473,10 @@ class DictionarySearchGUI:
         self.word_entry.delete(0, tk.END)
         self.freq_entry.delete(0, tk.END)
 
+        self.comparison_label.config(
+            text=f"Added word '{word}' with frequency {freq}. Now select an algorithm."
+        )
+
     def update_table(self):
         for row in self.table.get_children():
             self.table.delete(row)
@@ -450,7 +493,7 @@ class DictionarySearchGUI:
         self.update_result_cards("Not selected", "-", "-")
 
         self.comparison_label.config(
-            text="OBST minimizes expected search cost. Greedy and Balanced BST are used for comparison."
+            text="All data cleared. Add words or load sample data."
         )
 
     def load_sample_data(self):
@@ -463,8 +506,15 @@ class DictionarySearchGUI:
             ("fish", 15),
             ("goat", 25)
         ]
+
+        self.last_costs = {}
         self.update_table()
-        messagebox.showinfo("Sample Loaded", "Sample dictionary data loaded successfully.")
+        self.show_empty_canvas_message()
+        self.update_result_cards("Not selected", "-", "-")
+
+        self.comparison_label.config(
+            text="Sample data loaded successfully. Scroll down and select OBST, Greedy BST, or Balanced BST."
+        )
 
     def update_result_cards(self, algorithm, cost, root_word):
         self.algorithm_card.value_label.config(text=algorithm)
