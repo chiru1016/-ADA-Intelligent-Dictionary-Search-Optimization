@@ -49,7 +49,6 @@ class DictionarySearchGUI:
         )
 
     def create_layout(self):
-        # Header
         header = tk.Frame(self.root, bg="#1E3A8A", height=80)
         header.pack(fill="x")
 
@@ -71,19 +70,17 @@ class DictionarySearchGUI:
         )
         subtitle.pack()
 
-        # Main container
         main_frame = tk.Frame(self.root, bg="#F4F7FB")
         main_frame.pack(fill="both", expand=True, padx=20, pady=18)
 
-        # Left panel
-        left_panel = tk.Frame(main_frame, bg="#FFFFFF", bd=0, relief="flat")
+        left_panel = tk.Frame(main_frame, bg="#FFFFFF", width=330)
         left_panel.pack(side="left", fill="y", padx=(0, 15))
+        left_panel.pack_propagate(False)
 
         self.create_input_card(left_panel)
-        self.create_table_card(left_panel)
         self.create_action_card(left_panel)
+        self.create_table_card(left_panel)
 
-        # Right panel
         right_panel = tk.Frame(main_frame, bg="#F4F7FB")
         right_panel.pack(side="right", fill="both", expand=True)
 
@@ -93,7 +90,7 @@ class DictionarySearchGUI:
 
     def create_input_card(self, parent):
         card = tk.Frame(parent, bg="white", padx=18, pady=15)
-        card.pack(fill="x", padx=0, pady=(0, 15))
+        card.pack(fill="x", padx=0, pady=(0, 12))
 
         tk.Label(
             card,
@@ -105,11 +102,11 @@ class DictionarySearchGUI:
 
         tk.Label(
             card,
-            text="Enter a word and its search frequency",
+            text="Enter word and search frequency",
             font=("Segoe UI", 9),
             bg="white",
             fg="#6B7280"
-        ).pack(anchor="w", pady=(0, 12))
+        ).pack(anchor="w", pady=(0, 10))
 
         tk.Label(
             card,
@@ -123,10 +120,9 @@ class DictionarySearchGUI:
             card,
             font=("Segoe UI", 11),
             bd=1,
-            relief="solid",
-            width=28
+            relief="solid"
         )
-        self.word_entry.pack(fill="x", pady=(4, 10), ipady=6)
+        self.word_entry.pack(fill="x", pady=(4, 8), ipady=5)
 
         tk.Label(
             card,
@@ -140,10 +136,9 @@ class DictionarySearchGUI:
             card,
             font=("Segoe UI", 11),
             bd=1,
-            relief="solid",
-            width=28
+            relief="solid"
         )
-        self.freq_entry.pack(fill="x", pady=(4, 14), ipady=6)
+        self.freq_entry.pack(fill="x", pady=(4, 12), ipady=5)
 
         add_btn = tk.Button(
             card,
@@ -157,7 +152,7 @@ class DictionarySearchGUI:
             relief="flat",
             cursor="hand2"
         )
-        add_btn.pack(fill="x", ipady=8)
+        add_btn.pack(fill="x", ipady=7)
 
         sample_btn = tk.Button(
             card,
@@ -170,7 +165,7 @@ class DictionarySearchGUI:
             relief="flat",
             cursor="hand2"
         )
-        sample_btn.pack(fill="x", pady=(10, 0), ipady=8)
+        sample_btn.pack(fill="x", pady=(8, 0), ipady=7)
 
         clear_btn = tk.Button(
             card,
@@ -183,57 +178,15 @@ class DictionarySearchGUI:
             relief="flat",
             cursor="hand2"
         )
-        clear_btn.pack(fill="x", pady=(10, 0), ipady=8)
-
-    def create_table_card(self, parent):
-        card = tk.Frame(parent, bg="white", padx=18, pady=15)
-        card.pack(fill="both", expand=True, pady=(0, 15))
-
-        tk.Label(
-            card,
-            text="Dictionary Dataset",
-            font=("Segoe UI", 14, "bold"),
-            bg="white",
-            fg="#111827"
-        ).pack(anchor="w")
-
-        tk.Label(
-            card,
-            text="Words are sorted internally for BST construction",
-            font=("Segoe UI", 9),
-            bg="white",
-            fg="#6B7280"
-        ).pack(anchor="w", pady=(0, 12))
-
-        table_frame = tk.Frame(card, bg="white")
-        table_frame.pack(fill="both", expand=True)
-
-        self.table = ttk.Treeview(
-            table_frame,
-            columns=("Word", "Frequency"),
-            show="headings",
-            height=9
-        )
-
-        self.table.heading("Word", text="Word")
-        self.table.heading("Frequency", text="Frequency")
-
-        self.table.column("Word", width=180, anchor="center")
-        self.table.column("Frequency", width=130, anchor="center")
-
-        scrollbar = ttk.Scrollbar(table_frame, orient="vertical", command=self.table.yview)
-        self.table.configure(yscrollcommand=scrollbar.set)
-
-        self.table.pack(side="left", fill="both", expand=True)
-        scrollbar.pack(side="right", fill="y")
+        clear_btn.pack(fill="x", pady=(8, 0), ipady=7)
 
     def create_action_card(self, parent):
         card = tk.Frame(parent, bg="white", padx=18, pady=15)
-        card.pack(fill="x")
+        card.pack(fill="x", pady=(0, 12))
 
         tk.Label(
             card,
-            text="Build Algorithms",
+            text="Select Algorithm",
             font=("Segoe UI", 14, "bold"),
             bg="white",
             fg="#111827"
@@ -241,11 +194,11 @@ class DictionarySearchGUI:
 
         tk.Label(
             card,
-            text="Compare different tree construction methods",
+            text="Click any algorithm to build and view tree",
             font=("Segoe UI", 9),
             bg="white",
             fg="#6B7280"
-        ).pack(anchor="w", pady=(0, 12))
+        ).pack(anchor="w", pady=(0, 10))
 
         obst_btn = tk.Button(
             card,
@@ -259,7 +212,7 @@ class DictionarySearchGUI:
             relief="flat",
             cursor="hand2"
         )
-        obst_btn.pack(fill="x", ipady=9)
+        obst_btn.pack(fill="x", ipady=8)
 
         greedy_btn = tk.Button(
             card,
@@ -273,7 +226,7 @@ class DictionarySearchGUI:
             relief="flat",
             cursor="hand2"
         )
-        greedy_btn.pack(fill="x", pady=(10, 0), ipady=9)
+        greedy_btn.pack(fill="x", pady=(8, 0), ipady=8)
 
         balanced_btn = tk.Button(
             card,
@@ -287,7 +240,49 @@ class DictionarySearchGUI:
             relief="flat",
             cursor="hand2"
         )
-        balanced_btn.pack(fill="x", pady=(10, 0), ipady=9)
+        balanced_btn.pack(fill="x", pady=(8, 0), ipady=8)
+
+    def create_table_card(self, parent):
+        card = tk.Frame(parent, bg="white", padx=18, pady=15)
+        card.pack(fill="both", expand=True)
+
+        tk.Label(
+            card,
+            text="Dictionary Dataset",
+            font=("Segoe UI", 14, "bold"),
+            bg="white",
+            fg="#111827"
+        ).pack(anchor="w")
+
+        tk.Label(
+            card,
+            text="Words are sorted internally",
+            font=("Segoe UI", 9),
+            bg="white",
+            fg="#6B7280"
+        ).pack(anchor="w", pady=(0, 10))
+
+        table_frame = tk.Frame(card, bg="white")
+        table_frame.pack(fill="both", expand=True)
+
+        self.table = ttk.Treeview(
+            table_frame,
+            columns=("Word", "Frequency"),
+            show="headings",
+            height=6
+        )
+
+        self.table.heading("Word", text="Word")
+        self.table.heading("Frequency", text="Frequency")
+
+        self.table.column("Word", width=150, anchor="center")
+        self.table.column("Frequency", width=110, anchor="center")
+
+        scrollbar = ttk.Scrollbar(table_frame, orient="vertical", command=self.table.yview)
+        self.table.configure(yscrollcommand=scrollbar.set)
+
+        self.table.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
 
     def create_result_cards(self, parent):
         cards_frame = tk.Frame(parent, bg="#F4F7FB")
@@ -376,13 +371,7 @@ class DictionarySearchGUI:
         )
         self.canvas.pack(fill="both", expand=True, pady=(12, 0))
 
-        self.canvas.create_text(
-            430,
-            190,
-            text="Build a tree to view visualization",
-            font=("Segoe UI", 14, "bold"),
-            fill="#9CA3AF"
-        )
+        self.show_empty_canvas_message()
 
     def create_comparison_card(self, parent):
         card = tk.Frame(parent, bg="white", padx=15, pady=12)
@@ -405,6 +394,16 @@ class DictionarySearchGUI:
             justify="left"
         )
         self.comparison_label.pack(anchor="w", pady=(6, 0))
+
+    def show_empty_canvas_message(self):
+        self.canvas.delete("all")
+        self.canvas.create_text(
+            430,
+            190,
+            text="Load data and select an algorithm to view tree",
+            font=("Segoe UI", 14, "bold"),
+            fill="#9CA3AF"
+        )
 
     def add_word(self):
         word = self.word_entry.get().strip().lower()
@@ -446,15 +445,7 @@ class DictionarySearchGUI:
         self.words_data = []
         self.last_costs = {}
         self.update_table()
-        self.canvas.delete("all")
-
-        self.canvas.create_text(
-            430,
-            190,
-            text="Build a tree to view visualization",
-            font=("Segoe UI", 14, "bold"),
-            fill="#9CA3AF"
-        )
+        self.show_empty_canvas_message()
 
         self.update_result_cards("Not selected", "-", "-")
 
@@ -473,6 +464,7 @@ class DictionarySearchGUI:
             ("goat", 25)
         ]
         self.update_table()
+        messagebox.showinfo("Sample Loaded", "Sample dictionary data loaded successfully.")
 
     def update_result_cards(self, algorithm, cost, root_word):
         self.algorithm_card.value_label.config(text=algorithm)
@@ -502,7 +494,7 @@ class DictionarySearchGUI:
 
     def build_greedy(self):
         if not self.words_data:
-            messagebox.showerror("Error", "Please add words first.")
+            messagebox.showerror("Error", "Please add words first or load sample data.")
             return
 
         sorted_by_freq = sorted(self.words_data, key=lambda x: x[1], reverse=True)
@@ -520,7 +512,7 @@ class DictionarySearchGUI:
 
     def build_balanced(self):
         if not self.words_data:
-            messagebox.showerror("Error", "Please add words first.")
+            messagebox.showerror("Error", "Please add words first or load sample data.")
             return
 
         sorted_words = sorted(self.words_data, key=lambda x: x[0])
@@ -548,7 +540,7 @@ class DictionarySearchGUI:
 
     def build_obst(self):
         if not self.words_data:
-            messagebox.showerror("Error", "Please add words first.")
+            messagebox.showerror("Error", "Please add words first or load sample data.")
             return
 
         data = sorted(self.words_data, key=lambda x: x[0])
@@ -602,12 +594,14 @@ class DictionarySearchGUI:
         return root
 
     def draw_tree(self, root, node_fill, node_outline):
+        self.root.update_idletasks()
         self.canvas.delete("all")
 
         if root is None:
             return
 
         canvas_width = self.canvas.winfo_width()
+
         if canvas_width <= 1:
             canvas_width = 850
 
@@ -629,6 +623,7 @@ class DictionarySearchGUI:
         if node.left:
             child_x = x - gap
             child_y = y + 90
+
             self.canvas.create_line(
                 x,
                 y + radius,
@@ -637,11 +632,20 @@ class DictionarySearchGUI:
                 fill="#94A3B8",
                 width=2
             )
-            self.draw_node(node.left, child_x, child_y, max(gap // 2, 45), node_fill, node_outline)
+
+            self.draw_node(
+                node.left,
+                child_x,
+                child_y,
+                max(gap // 2, 45),
+                node_fill,
+                node_outline
+            )
 
         if node.right:
             child_x = x + gap
             child_y = y + 90
+
             self.canvas.create_line(
                 x,
                 y + radius,
@@ -650,7 +654,15 @@ class DictionarySearchGUI:
                 fill="#94A3B8",
                 width=2
             )
-            self.draw_node(node.right, child_x, child_y, max(gap // 2, 45), node_fill, node_outline)
+
+            self.draw_node(
+                node.right,
+                child_x,
+                child_y,
+                max(gap // 2, 45),
+                node_fill,
+                node_outline
+            )
 
         self.canvas.create_oval(
             x - radius,
@@ -663,6 +675,7 @@ class DictionarySearchGUI:
         )
 
         display_word = node.word
+
         if len(display_word) > 9:
             display_word = display_word[:8] + "..."
 
@@ -686,11 +699,11 @@ class DictionarySearchGUI:
         text = (
             f"Selected Algorithm: {algorithm_name}\n"
             f"Total Weighted Search Cost: {cost}\n"
-            f"Meaning: Lower search cost gives faster dictionary search performance.\n"
+            f"Lower search cost means faster dictionary search performance.\n"
         )
 
         if self.last_costs:
-            text += "\nCurrent Recorded Costs:\n"
+            text += "\nRecorded Costs:\n"
             for algo, algo_cost in self.last_costs.items():
                 text += f"• {algo}: {algo_cost}\n"
 
