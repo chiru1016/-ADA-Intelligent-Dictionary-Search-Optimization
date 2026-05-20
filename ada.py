@@ -7,7 +7,7 @@ class Node:
         self.word = word
         self.freq = freq
         self.left = None
-        self.right = None
+        self.right = N
 
 
 class DictionarySearchGUI:
